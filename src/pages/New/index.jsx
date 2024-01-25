@@ -1,47 +1,72 @@
-import * as C from "./styles"
+import * as C from './styles'
 
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
-import { Header } from "../../components/Header"
-import { Section } from "../../components/Section"
-import { Input } from "../../components/Input"
-import { Button } from "../../components/Button"
-import { TextArea } from "../../components/TextArea"
-import { NoteItem } from "../../components/NoteItem"
+import { useState } from 'react'
+import { Button } from '../../components/Button'
+import { Header } from '../../components/Header'
+import { Input } from '../../components/Input'
+import { NoteItem } from '../../components/NoteItem'
+import { Section } from '../../components/Section'
+import { TextArea } from '../../components/TextArea'
 
 const New = () => {
-  return (
-    <C.Container>
-      <Header />
+	const [links, setLinks] = useState([])
+	const [newLink, setNewLink] = useState('')
 
-      <main>
-        <C.Form>
-          <header>
-            <h1>Criar nota</h1>
-            <Link to="/">Voltar</Link>
-          </header>
+	const handleAddLink = () => {
+		setLinks((prev) => [...prev, newLink])
 
-          <Input placeholder="Título" />
-          <TextArea placeholder="Observações" />
+		setNewLink('')
+	}
 
-          <Section title="Links úteis">
-            <NoteItem value="https://rocketseat.com.br" />
-            <NoteItem $isNew={true} />
-          </Section>
+	const handleRemoveLink = (deletedLinkIndex) => {
+		setLinks((prev) => prev.filter((_, index) => index !== deletedLinkIndex))
+	}
 
-          <Section title="Marcadores">
-            <div className="tags">
-              <NoteItem value="react" />
-              <NoteItem $isNew placeholder="Nova tag" />
-            </div>
-          </Section>
+	return (
+		<C.Container>
+			<Header />
 
-          <Button title="Salvar" />
-        </C.Form>
-      </main>
+			<main>
+				<C.Form>
+					<header>
+						<h1>Criar nota</h1>
+						<Link to='/'>Voltar</Link>
+					</header>
 
-    </C.Container>
-  )
+					<Input placeholder='Título' />
+					<TextArea placeholder='Observações' />
+
+					<Section title='Links úteis'>
+						<NoteItem
+							isNew
+							placeholder='Novo link'
+							value={newLink}
+							onChange={(e) => setNewLink(e.target.value)}
+							onClick={handleAddLink}
+						/>
+					</Section>
+
+					<Section title='Marcadores'>
+						<div className='tags'>
+							{links.map((link, i) => {
+								return (
+									<NoteItem
+										key={i}
+										value={link}
+										onClick={() => handleRemoveLink(i)}
+									/>
+								)
+							})}
+						</div>
+					</Section>
+
+					<Button title='Salvar' />
+				</C.Form>
+			</main>
+		</C.Container>
+	)
 }
 
 export default New
