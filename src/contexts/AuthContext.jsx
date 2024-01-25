@@ -36,8 +36,16 @@ export const AuthProvider = ({ children }) => {
 		setData({})
 	}
 
-	const updateProfile = async ({ user }) => {
+	const updateProfile = async ({ user, avatarFile }) => {
 		try {
+			if (avatarFile) {
+				const fileUploadForm = new FormData()
+				fileUploadForm.append('avatar', avatarFile)
+
+				const res = await api.patch('/users/avatar', fileUploadForm)
+				user.avatar = res.data.avatar
+			}
+
 			// remove a senha do objeto user
 			const { new_password, old_password, ...userData } = user
 

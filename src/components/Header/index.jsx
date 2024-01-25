@@ -1,20 +1,23 @@
 import { RiShutDownLine } from 'react-icons/ri'
-import { useAuthContext } from '../../contexts/authContext'
+import { useAuthContext } from '../../contexts/AuthContext'
+import { api } from '../../libs/axios'
 import * as C from './styles'
 
 export const Header = () => {
-	const { signOut } = useAuthContext()
+	const { signOut, user } = useAuthContext()
+
+	const avatarUrl = user.avatar ? `${api.defaults.baseURL}/files/${user.avatar}` : avatarFallback
 
 	return (
 		<C.Container>
 			<C.Profile to='/profile'>
 				<img
-					src='https://github.com/xbozo.png'
-					alt='Foto do usuário'
+					src={avatarUrl}
+					alt={user.name}
 				/>
 				<div>
 					<span>Bem-vindo,</span>
-					<strong>Guilherme Viana</strong>
+					<strong>{user.name}</strong>
 				</div>
 			</C.Profile>
 
