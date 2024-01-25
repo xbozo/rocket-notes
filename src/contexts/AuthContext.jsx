@@ -16,6 +16,8 @@ export const AuthProvider = ({ children }) => {
 			localStorage.setItem('@rocketnotes:user', JSON.stringify(user))
 			localStorage.setItem('@rocketnotes:token', token)
 
+			api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
 			setData({ user, token })
 		} catch (err) {
 			if (err.response) {
@@ -34,12 +36,33 @@ export const AuthProvider = ({ children }) => {
 		setData({})
 	}
 
+	const updateProfile = async ({ user }) => {
+		try {
+			// remove a senha do objeto user
+			const { new_password, old_password, ...userData } = user
+
+			await api.put('/users', user)
+
+			localStorage.setItem('@rocketnotes:user', JSON.stringify(userData))
+
+			setData({ user: userData, token: data.token })
+			alert('Perfil atualizado.....')
+		} catch (err) {
+			if (err.response) {
+				alert(err.response.data.message)
+				console.error(err.response.data.message)
+			} else {
+				alert('Erro genérico; não foi possível atualizar o perfil.', console.error(err))
+			}
+		}
+	}
+
 	useEffect(() => {
 		const token = localStorage.getItem('@rocketnotes:token')
 		const user = localStorage.getItem('@rocketnotes:user')
 
 		if (token && user) {
-			api.defaults.headers.authorization = `Bearer ${token}`
+			api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
 			setData({ token, user: JSON.parse(user) })
 		}
@@ -48,6 +71,7 @@ export const AuthProvider = ({ children }) => {
 	const contextValue = {
 		signIn,
 		signOut,
+		updateProfile,
 		user: data.user,
 	}
 

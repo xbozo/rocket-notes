@@ -1,66 +1,94 @@
-import * as C from "./styles"
-import { FiArrowLeft, FiUser, FiMail, FiLock, FiCamera } from "react-icons/fi"
+import { FiArrowLeft, FiCamera, FiLock, FiMail, FiUser } from 'react-icons/fi'
+import * as C from './styles'
 
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
-import { Input } from "../../components/Input"
-import { Button } from "../../components/Button"
+import { useState } from 'react'
+import { Button } from '../../components/Button'
+import { Input } from '../../components/Input'
+import { useAuthContext } from '../../contexts/AuthContext'
 
 const Profile = () => {
-  return (
-    <C.Container>
-      <header>
-        <Link to="/">
-          <FiArrowLeft />
-        </Link>
-      </header>
+	const { user, updateProfile } = useAuthContext()
 
-      <C.Form>
-        <C.Avatar>
-          <img 
-            src="https://github.com/xbozo.png" 
-            alt="Foto do usuário" 
-          />
+	const [name, setName] = useState(user.name)
+	const [email, setEmail] = useState(user.email)
+	const [oldPassword, setOldPassword] = useState()
+	const [newPassword, setNewPassword] = useState()
 
-          <label htmlFor="avatar">
-            <FiCamera />
+	const handleUpdateUser = async () => {
+		const user = {
+			name,
+			email,
+			new_password: newPassword,
+			old_password: oldPassword,
+		}
 
-            <input 
-              id="avatar"
-              type="file"
-            />
-          </label>
-        </C.Avatar>
+		await updateProfile({ user })
+	}
 
-        <Input 
-          placeholder="Nome"
-          type="text"
-          icon={FiUser}
-        />
+	return (
+		<C.Container>
+			<header>
+				<Link to='/'>
+					<FiArrowLeft />
+				</Link>
+			</header>
 
-        <Input 
-          placeholder="E-mail"
-          type="text"
-          icon={FiMail}
-        />
+			<C.Form>
+				<C.Avatar>
+					<img
+						src='https://github.com/xbozo.png'
+						alt='Foto do usuário'
+					/>
 
-        <Input 
-          placeholder="Senha atual"
-          type="password"
-          icon={FiLock}
-        />
+					<label htmlFor='avatar'>
+						<FiCamera />
 
-        <Input 
-          placeholder="Nova senha"
-          type="password"
-          icon={FiLock}
-        />
+						<input
+							id='avatar'
+							type='file'
+						/>
+					</label>
+				</C.Avatar>
 
-        <Button title="Salvar" />
+				<Input
+					placeholder='Nome'
+					type='text'
+					icon={FiUser}
+					value={name}
+					onChange={(e) => setName(e.target.value)}
+				/>
 
-      </C.Form>
-    </C.Container>
-  )
+				<Input
+					placeholder='E-mail'
+					type='text'
+					icon={FiMail}
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+				/>
+
+				<Input
+					placeholder='Senha atual'
+					type='password'
+					icon={FiLock}
+					onChange={(e) => setOldPassword(e.target.value)}
+				/>
+
+				<Input
+					placeholder='Nova senha'
+					type='password'
+					icon={FiLock}
+					onChange={(e) => setNewPassword(e.target.value)}
+				/>
+
+				<Button
+					title='Salvar'
+					onClickFn={handleUpdateUser}
+				/>
+			</C.Form>
+		</C.Container>
+	)
 }
 
 export default Profile
