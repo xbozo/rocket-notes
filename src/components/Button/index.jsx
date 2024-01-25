@@ -1,9 +1,12 @@
-import * as C from "./styles";
+import * as C from './styles'
 
-export const Button = (props) => {
-    return (
-        <C.Container  type="button">
-            {props.title}
-        </C.Container>
-    )
+export const Button = ({ title, onClickFn }) => {
+	return (
+		<C.Button
+			type='button'
+			onClick={onClickFn}
+		>
+			{title}
+		</C.Button>
+	)
 }
