@@ -45,6 +45,10 @@ const New = () => {
 	}
 
 	const handleAddNewNote = async () => {
+		if (newTag || newLink || !title) {
+			return alert('Preencha todos os dados corretamente.')
+		}
+
 		try {
 			await api.post('/notes', {
 				title,

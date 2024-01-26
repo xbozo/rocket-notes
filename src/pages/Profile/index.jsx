@@ -4,6 +4,7 @@ import * as C from './styles'
 import { Link } from 'react-router-dom'
 
 import { useState } from 'react'
+import avatarFallback from '../../assets/images/avatar_placeholder.svg'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
 import { useAuthContext } from '../../contexts/AuthContext'
@@ -30,7 +31,10 @@ const Profile = () => {
 			old_password: oldPassword,
 		}
 
-		await updateProfile({ user, avatarFile })
+		await updateProfile({
+			user,
+			avatarFile,
+		})
 	}
 
 	const handleChangeAvatar = (event) => {

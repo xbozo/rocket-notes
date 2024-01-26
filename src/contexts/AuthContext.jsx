@@ -33,6 +33,8 @@ export const AuthProvider = ({ children }) => {
 		localStorage.removeItem('@rocketnotes:user')
 		localStorage.removeItem('@rocketnotes:token')
 
+		delete api.defaults.headers.common['Authorization']
+
 		setData({})
 	}
 
