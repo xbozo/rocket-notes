@@ -24,15 +24,17 @@ const Profile = () => {
 	const [avatarFile, setAvatarFile] = useState(null)
 
 	const handleUpdateUser = async () => {
-		const user = {
+		const updatedUser = {
 			name,
 			email,
 			new_password: newPassword,
 			old_password: oldPassword,
 		}
 
+		const updatedUserData = Object.assign(user, updatedUser)
+
 		await updateProfile({
-			user,
+			user: updatedUserData,
 			avatarFile,
 		})
 	}
