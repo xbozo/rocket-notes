@@ -39,6 +39,8 @@ export const AuthProvider = ({ children }) => {
 	}
 
 	const updateProfile = async ({ user, avatarFile }) => {
+		console.log(user)
+
 		try {
 			if (avatarFile) {
 				const fileUploadForm = new FormData()

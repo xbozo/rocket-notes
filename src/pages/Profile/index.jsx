@@ -24,6 +24,12 @@ const Profile = () => {
 	const [avatarFile, setAvatarFile] = useState(null)
 
 	const handleUpdateUser = async () => {
+		if (newPassword && !oldPassword) {
+			return alert('Preencha a senha atual.')
+		} else if (oldPassword && !newPassword) {
+			return alert('Preencha a nova senha.')
+		}
+
 		const updatedUser = {
 			name,
 			email,
