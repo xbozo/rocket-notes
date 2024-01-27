@@ -15,6 +15,15 @@ const Details = () => {
 	const params = useParams()
 	const navigate = useNavigate()
 
+	const handleDeleteNote = async () => {
+		const confirm = window.confirm('Deseja realmente excluir a nota?')
+
+		if (confirm) {
+			await api.delete(`/notes/${params.id}`)
+			navigate('/')
+		}
+	}
+
 	useEffect(() => {
 		const fetchNoteDetails = async () => {
 			const res = await api.get(`/notes/${params.id}`)
@@ -31,7 +40,10 @@ const Details = () => {
 			{noteData && (
 				<main>
 					<C.Content>
-						<ButtonText title='Excluir nota' />
+						<ButtonText
+							onClickFn={handleDeleteNote}
+							title='Excluir nota'
+						/>
 
 						<h1>{noteData.title}</h1>
 
