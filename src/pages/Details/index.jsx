@@ -1,48 +1,84 @@
-import * as C from "./styles"
+import * as C from './styles'
 
-import { Header } from "../../components/Header"
-import { Button } from "../../components/Button"
-import { Section } from "../../components/Section"
-import { ButtonText } from "../../components/ButtonText"
-import { Tag } from "../../components/Tag"
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from '../../components/Button'
+import { ButtonText } from '../../components/ButtonText'
+import { Header } from '../../components/Header'
+import { Section } from '../../components/Section'
+import { Tag } from '../../components/Tag'
+import { api } from '../../libs/axios'
 
 const Details = () => {
-  return (
-    <C.Container>
-      <Header />
+	const [noteData, setNoteData] = useState(null)
 
-      <main>
-        <C.Content>
-          <ButtonText title="Excluir nota" />
+	const params = useParams()
+	const navigate = useNavigate()
 
-          <h1>
-            Introdução ao React
-          </h1>
+	useEffect(() => {
+		const fetchNoteDetails = async () => {
+			const res = await api.get(`/notes/${params.id}`)
+			setNoteData(res.data)
+		}
 
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Autem voluptates cupiditate assumenda ullam ipsum temporibus ad qui vel veritatis! Aperiam, velit.
-            Possimus unde similique corporis suscipit sequi facilis hic nemo?
-            Possimus unde similique corporis suscipit sequi facilis hic nemo?
-          </p>
+		fetchNoteDetails()
+	}, [])
 
-          <Section title="Links úteis">
-            <C.Links>
-              <li> <a href="#">https://rocketseat.com.br/</a> </li>
-              <li> <a href="#">https://rocketseat.com.br/</a> </li>
-            </C.Links>
-          </Section>
+	return (
+		<C.Container>
+			<Header />
 
-          <Section title="Marcadores">
-            <Tag title="express" />
-            <Tag title="nodejs" />
-          </Section>
+			{noteData && (
+				<main>
+					<C.Content>
+						<ButtonText title='Excluir nota' />
 
-          <Button title="Voltar" />
-        </C.Content>
-      </main>
-    </C.Container>
-  )
+						<h1>{noteData.title}</h1>
+
+						<p>{noteData.description}</p>
+
+						{noteData.links && (
+							<Section title='Links úteis'>
+								<C.Links>
+									{noteData.links.map((noteLink) => {
+										return (
+											<li key={noteLink.id}>
+												{' '}
+												<a
+													target='_blank'
+													href={noteLink.url}
+												>
+													{noteLink.url}
+												</a>{' '}
+											</li>
+										)
+									})}
+								</C.Links>
+							</Section>
+						)}
+
+						{noteData.tags && (
+							<Section title='Marcadores'>
+								{noteData.tags.map((noteTag) => {
+									return (
+										<Tag
+											title={noteTag.name}
+											key={noteTag.id}
+										/>
+									)
+								})}
+							</Section>
+						)}
+
+						<Button
+							onClickFn={() => navigate('/')}
+							title='Voltar'
+						/>
+					</C.Content>
+				</main>
+			)}
+		</C.Container>
+	)
 }
 
 export default Details

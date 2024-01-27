@@ -1,52 +1,122 @@
-import * as C from "./styles"
-import { FiPlus, FiSearch } from "react-icons/fi"
+import { FiPlus, FiSearch } from 'react-icons/fi'
+import * as C from './styles'
 
-import { Header } from "../../components/Header"
-import { Input } from "../../components/Input"
-import { Note } from "../../components/Note"
-import { Section } from "../../components/Section"
-import { ButtonText } from "../../components/ButtonText"
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ButtonText } from '../../components/ButtonText'
+import { Header } from '../../components/Header'
+import { Input } from '../../components/Input'
+import { Note } from '../../components/Note'
+import { Section } from '../../components/Section'
+import { api } from '../../libs/axios'
 
 const Home = () => {
-  return (
-    <C.Container>
-      <C.Brand>
-        <h1>Rocketnotes</h1>
-      </C.Brand>
+	const [tags, setTags] = useState()
+	const [selectedTags, setSelectedTags] = useState([])
 
-      <Header />
+	const [search, setSearch] = useState('')
+	const [notes, setNotes] = useState([])
 
-      <C.Menu>
-        <li> <ButtonText title="Todos" isActive /> </li>
-        <li> <ButtonText title="React" /> </li>
-        <li> <ButtonText title="Nodejs" /> </li>
-      </C.Menu>
+	const navigate = useNavigate()
 
-      <C.Search>
-        <Input placeholder="Pesquisar pelo título" icon={FiSearch} />
-      </C.Search>
+	const handleSelectTag = (tagName) => {
+		if (tagName === 'all') {
+			return setSelectedTags([])
+		}
 
-      <C.Content>
-        <Section title="Minhas Notas">
-          <Note data={{
-            title: "React", 
-            tags: [
-              { id: "1", name: "react" },
-              { id: "2", name: "rocketseat" },
-            ]
-          }}
-          />
-        </Section>
-      </C.Content>
+		const alreadySelected = selectedTags.includes(tagName)
 
-      <C.NewNote to="/new">
-        <FiPlus />
-        Criar Nota
-      </C.NewNote>
+		if (alreadySelected) {
+			const filteredTags = selectedTags.filter((tag) => tag !== tagName)
+			return setSelectedTags(filteredTags)
+		}
 
-      
-    </C.Container>
-  )
+		return setSelectedTags((prev) => [...prev, tagName])
+	}
+
+	const handleShowNoteDetails = (id) => {
+		navigate(`/details/${id}`)
+	}
+
+	useEffect(() => {
+		const fetchTags = async () => {
+			const req = await api.get('/tags')
+			setTags(req.data)
+		}
+
+		fetchTags()
+	}, [])
+
+	useEffect(() => {
+		const fetchNotes = async () => {
+			const req = await api.get(`/notes?title=${search}&tags=${selectedTags}`)
+
+			setNotes(req.data)
+		}
+
+		fetchNotes()
+	}, [search, selectedTags])
+
+	return (
+		<C.Container>
+			<C.Brand>
+				<h1>Rocketnotes</h1>
+			</C.Brand>
+
+			<Header />
+
+			<C.Menu>
+				<li>
+					<ButtonText
+						title='Todos'
+						onClickFn={() => handleSelectTag('all')}
+						isActive={selectedTags.length === 0}
+					/>
+				</li>
+
+				{tags &&
+					tags.map((tag) => {
+						return (
+							<li key={tag.id}>
+								<ButtonText
+									title={tag.name}
+									onClickFn={() => handleSelectTag(tag.name)}
+									isActive={selectedTags.includes(tag.name)}
+								/>
+							</li>
+						)
+					})}
+			</C.Menu>
+
+			<C.Search>
+				<Input
+					placeholder='Pesquisar pelo título'
+					icon={FiSearch}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
+			</C.Search>
+
+			<C.Content>
+				<Section title='Minhas Notas'>
+					{notes &&
+						notes.map((note) => {
+							return (
+								<Note
+									key={note.id}
+									data={note}
+									onClick={() => handleShowNoteDetails(note.id)}
+								/>
+							)
+						})}
+				</Section>
+			</C.Content>
+
+			<C.NewNote to='/new'>
+				<FiPlus />
+				Criar Nota
+			</C.NewNote>
+		</C.Container>
+	)
 }
 
 export default Home
