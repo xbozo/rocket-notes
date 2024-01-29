@@ -6,7 +6,7 @@ import { Input } from '../../components/Input'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../components/Button'
-import { useAuthContext } from '../../contexts/authContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 
 const SignIn = () => {
 	const [email, setEmail] = useState('')

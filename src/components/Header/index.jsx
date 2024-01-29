@@ -1,7 +1,7 @@
 import { RiShutDownLine } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 import avatarFallback from '../../assets/images/avatar_placeholder.svg'
-import { useAuthContext } from '../../contexts/authContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 import { api } from '../../libs/axios'
 import * as C from './styles'
 

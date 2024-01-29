@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom'
 
-import { useAuthContext } from '../contexts/authContext.jsx'
+import { useAuthContext } from '../contexts/AuthContext.jsx'
 import { AppRoutes } from './app.routes.jsx'
 import { AuthRoutes } from './auth.routes.jsx'
 

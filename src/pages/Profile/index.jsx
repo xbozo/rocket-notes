@@ -7,7 +7,7 @@ import { useState } from 'react'
 import avatarFallback from '../../assets/images/avatar_placeholder.svg'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
-import { useAuthContext } from '../../contexts/authContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 import { api } from '../../libs/axios'
 
 const Profile = () => {

@@ -6,7 +6,7 @@ import GlobalStyles from './styles/global'
 import theme from './styles/theme'
 
 import Routes from '../src/routes'
-import { AuthProvider } from './contexts/authContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
