@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 		delete api.defaults.headers.common['Authorization']
 
 		setData({})
+		route
 	}
 
 	const updateProfile = async ({ user, avatarFile }) => {
